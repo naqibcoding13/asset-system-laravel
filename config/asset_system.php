@@ -1,0 +1,135 @@
+<?php
+
+return [
+    'department' => 'Pejabat Tanah dan Jajahan Bachok',
+    'asset_main_category' => [
+        'code' => '35000',
+        'label' => 'Kelengkapan dan peralatan',
+    ],
+    'application_years' => [
+        '2024',
+        '2025',
+        '2026',
+        '2027',
+    ],
+    'units' => [
+        'Bahagian Pendaftaran',
+        'Bahagian Hasil',
+        'Bahagian Pembangunan',
+        'Bahagian Khidmat Pengurusan',
+        'Bahagian Teknikal',
+        'Bahagian Pembangunan Tanah & Pelupusan',
+    ],
+    'asset_categories' => [
+        '35100' => [
+            'label' => 'Alat kelengkapan pejabat, perabot dan kumpulan buku',
+            'details' => [
+                'Kerusi kakitangan',
+                'Sofa',
+                'Side table',
+                'Bidai',
+                'Meja pejabat',
+                'Meja mesyuarat',
+                'Almari fail',
+                'Kabinet besi',
+                'Rak buku',
+                'Kumpulan buku',
+            ],
+        ],
+        '35200' => [
+            'label' => 'Alat kelengkapan elektronik',
+            'details' => [
+                'Set komputer',
+                'Laptop',
+                'Printer',
+                'Scanner',
+                'Monitor',
+                'Projektor',
+                'Televisyen',
+                'Mesin pencetak label',
+                'Tablet',
+                'UPS',
+            ],
+        ],
+        '35300' => [
+            'label' => 'Alat kelengkapan elektrik',
+            'details' => [
+                'Penghawa dingin',
+                'Generator',
+                'Kipas',
+                'Lampu kecemasan',
+                'Pemanas air',
+                'Soket sambungan industri',
+                'Stabilizer voltan',
+            ],
+        ],
+        '35400' => [
+            'label' => 'Alat kelengkapan penyiaran dan perhubungan',
+            'details' => [
+                'Sistem PA',
+                'Telefon pejabat',
+                'Walkie-talkie',
+                'Mesin sidang video',
+                'Mikrofon',
+                'Pembesar suara',
+                'Router',
+                'Switch rangkaian',
+            ],
+        ],
+        '35500' => [
+            'label' => 'Alat kelengkapan fotografi, perubatan dan muzik',
+            'details' => [
+                'Kamera digital',
+                'Kamera CCTV mudah alih',
+                'Tripod',
+                'Kit pertolongan cemas',
+                'Kerusi roda',
+                'Alat pemeriksaan kesihatan',
+                'Sistem audio muzik',
+            ],
+        ],
+        '35600' => [
+            'label' => 'Alat kelengkapan pertahanan',
+            'details' => [
+                'Helmet keselamatan taktikal',
+                'Vest keselamatan',
+                'Lampu suluh taktikal',
+                'Peralatan kawalan akses',
+                'Peralatan rondaan',
+            ],
+        ],
+        '35700' => [
+            'label' => 'Alat kelengkapan bekalan air dan elektrik',
+            'details' => [
+                'Pam air',
+                'Tangki air',
+                'Meter elektrik',
+                'Panel agihan elektrik',
+                'Kabel bekalan',
+                'Set penjana kuasa sokongan',
+            ],
+        ],
+        '35800' => [
+            'label' => 'Alat kelengkapan keselamatan, kebersihan dan kesihatan',
+            'details' => [
+                'Pemadam api',
+                'CCTV',
+                'Vacuum cleaner',
+                'Mesin pencuci lantai',
+                'Tong sampah industri',
+                'Penapis udara',
+                'Alat sanitasi',
+            ],
+        ],
+        '35900' => [
+            'label' => 'Alat kelengkapan yang lain',
+            'details' => [
+                'Mesin laminating',
+                'Mesin binding',
+                'Troli',
+                'Whiteboard',
+                'Peti simpanan',
+            ],
+        ],
+    ],
+];
