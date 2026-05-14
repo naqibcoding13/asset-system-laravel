@@ -3,15 +3,25 @@ FROM php:8.2-cli
 WORKDIR /var/www
 
 RUN apt-get update && apt-get install -y \
-    unzip zip curl libpng-dev libonig-dev libxml2-dev
+    unzip \
+    zip \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libpq-dev
 
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    pdo_pgsql \
+    pgsql
 
 COPY . .
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN composer install
+RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 10000
 
