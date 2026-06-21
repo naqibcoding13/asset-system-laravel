@@ -2,6 +2,10 @@
 
 @section('content')
 
+@php
+    $isArchive = $isArchive ?? false;
+@endphp
+
 <style>
     body {
     position: relative;
@@ -29,21 +33,21 @@ body::before {
 }
 </style>
     <div class="hero-strip">
-        <h2 class="fw-bold mb-1">Senarai Permohonan Aset</h2>
-        <p class="mb-0 opacity-75">Urus dan semak permohonan bajet daripada jabatan dan bahagian.</p>
+        <h2 class="fw-bold mb-1">{{ $isArchive ? 'Arkib Permohonan Aset' : 'Senarai Permohonan Aset' }}</h2>
+        <p class="mb-0 opacity-75">{{ $isArchive ? 'Semak permohonan yang telah diarkibkan dan pulihkan semula jika perlu.' : 'Urus dan semak permohonan bajet daripada jabatan dan bahagian.' }}</p>
     </div>
 
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="page-card p-3 border-start border-primary border-4">
-                <small class="text-muted fw-bold">JUMLAH REKOD</small>
+                <small class="text-muted fw-bold">{{ $isArchive ? 'JUMLAH ARKIB' : 'JUMLAH REKOD' }}</small>
                 <h4 class="mb-0">{{ $requests->count() }} Permohonan</h4>
             </div>
         </div>
     </div>
 
     <div class="page-card p-4 mb-4">
-        <form class="row g-3">
+        <form class="row g-3" action="{{ $isArchive ? route('admin.archive.index') : route('admin.requests.index') }}">
             <div class="col-md-2">
                 <label class="form-label fw-semibold">Tahun</label>
                 <select name="tahun" class="form-select">
@@ -77,7 +81,7 @@ body::before {
             </div>
             <div class="col-md-2 d-flex align-items-end gap-2">
                 <button class="btn btn-primary w-100">Cari</button>
-                <a href="{{ route('admin.requests.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ $isArchive ? route('admin.archive.index') : route('admin.requests.index') }}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-clockwise"></i>
                 </a>
             </div>
@@ -93,7 +97,8 @@ body::before {
             ], fn ($value) => filled($value));
         @endphp
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0">Senarai Permohonan</h5>
+            <h5 class="fw-bold mb-0">{{ $isArchive ? 'Senarai Arkib' : 'Senarai Permohonan' }}</h5>
+            @if (! $isArchive)
             <form method="GET" action="{{ route('admin.requests.print') }}" target="_blank" class="d-flex align-items-center gap-2 flex-wrap">
                 @foreach ($printFilters as $filterKey => $filterValue)
                     <input type="hidden" name="{{ $filterKey }}" value="{{ $filterValue }}">
@@ -113,6 +118,7 @@ body::before {
                     <i class="bi bi-file-earmark-excel me-1"></i> Excel
                 </button>
             </form>
+            @endif
         </div>
         <div class="table-responsive">
             <table class="table table-hover align-middle">
@@ -123,6 +129,9 @@ body::before {
                         <th>Tahun</th>
                         <th>Bahagian</th>
                         <th>Jumlah</th>
+                        @if ($isArchive)
+                            <th>Diarkibkan</th>
+                        @endif
                         <th>Tindakan</th>
                     </tr>
                 </thead>
@@ -134,9 +143,29 @@ body::before {
                             <td><span class="badge bg-light text-dark border">{{ $request->tahun }}</span></td>
                             <td>{{ strtoupper($request->unit) }}</td>
                             <td class="fw-bold text-danger">RM {{ number_format($request->items->sum('jumlah'), 2) }}</td>
+                            @if ($isArchive)
+                                <td>{{ optional($request->archived_at)->format('d/m/Y H:i') }}</td>
+                            @endif
                             <td>
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('admin.requests.show', $request) }}" class="btn btn-sm btn-outline-primary">Perincian</a>
+                                    @if ($isArchive)
+                                        <form method="POST" action="{{ route('admin.requests.restore', $request) }}" onsubmit="return confirm('Pulihkan permohonan ini ke senarai aktif?')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="btn btn-sm btn-outline-success" title="Pulihkan">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('admin.requests.archive', $request) }}" onsubmit="return confirm('Arkibkan permohonan ini?')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="btn btn-sm btn-outline-secondary" title="Arkib">
+                                                <i class="bi bi-archive"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                     <form method="POST" action="{{ route('admin.requests.destroy', $request) }}" onsubmit="return confirm('Anda pasti mahu padam permohonan ini?')">
                                         @csrf
                                         @method('DELETE')
@@ -149,7 +178,7 @@ body::before {
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">Tiada rekod dijumpai untuk carian tersebut.</td>
+                            <td colspan="{{ $isArchive ? 7 : 6 }}" class="text-center py-5 text-muted">Tiada rekod dijumpai untuk carian tersebut.</td>
                         </tr>
                     @endforelse
                 </tbody>

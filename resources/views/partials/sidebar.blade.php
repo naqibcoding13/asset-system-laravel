@@ -129,11 +129,14 @@
                 <a class="nav-link {{ request()->routeIs('admin.requests.*') ? 'active' : '' }}" href="{{ route('admin.requests.index') }}">
                     <i class="bi bi-card-list"></i> Senarai Permohonan
                 </a>
+                <a class="nav-link {{ request()->routeIs('admin.archive.*') ? 'active' : '' }}" href="{{ route('admin.archive.index') }}">
+                    <i class="bi bi-archive-fill"></i> Arkib
+                </a>
                 <a class="nav-link {{ request()->routeIs('admin.reports.index') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">
                     <i class="bi bi-bar-chart-fill"></i> Laporan
                 </a>
                 <a class="nav-link {{ request()->routeIs('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
-                    <i class="bi bi-people-fill"></i> Manage User
+                    <i class="bi bi-people-fill"></i> Pengurusan Pengguna
                 </a>
             @endif
 

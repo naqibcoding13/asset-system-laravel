@@ -31,36 +31,24 @@ body::before {
     <div class="hero-strip d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div>
             <h2 class="fw-bold mb-1">Selamat Datang, Admin</h2>
-            <p class="mb-0 opacity-75">Ringkasan statistik permohonan aset Pejabat Tanah & Jajahan Bachok.</p>
+            <p class="mb-0 opacity-75">Ringkasan statistik permohonan aset Pejabat Tanah & Jajahan Bachok bagi tahun {{ $summary['current_year'] }}.</p>
         </div>
     </div>
 
     <div class="row g-4 mb-4">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="page-card p-4 h-100 border-start border-primary border-4">
-                <div class="text-muted small text-uppercase fw-bold">Jumlah Permohonan</div>
+                <div class="text-muted small text-uppercase fw-bold">Jumlah Permohonan Tahun Semasa</div>
                 <div class="fs-2 fw-bold">{{ $summary['total_requests'] }}</div>
                 <div class="mt-2 text-primary small">
                     <i class="bi bi-arrow-up-right me-1"></i> Rekod Berdaftar
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="page-card p-4 h-100">
-                <div class="text-muted small text-uppercase fw-bold">Aset Dimohon</div>
-                <div class="fs-2 fw-bold">{{ $summary['total_assets'] }}</div>
-                <div class="mt-2 text-success small">
-                    <i class="bi bi-check-circle me-1"></i> Item Aset
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="page-card p-4 h-100 border-bottom border-danger border-4">
-                <div class="text-muted small text-uppercase fw-bold">Anggaran Bajet</div>
+                <div class="text-muted small text-uppercase fw-bold">Kos Permohonan Tahun Semasa</div>
                 <div class="fs-2 fw-bold text-danger">RM {{ number_format($summary['total_budget'], 2) }}</div>
-                <div class="mt-2 text-danger small">
-                    <i class="bi bi-info-circle me-1"></i> Jumlah Terkumpul
-                </div>
             </div>
         </div>
     </div>

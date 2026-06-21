@@ -88,6 +88,15 @@ body::before {
             <div class="fw-bold text-uppercase mb-3" style="font-size: 0.9rem; color: #1e3a8a;">
                 <i class="bi bi-pie-chart-fill text-primary me-2"></i>Pecahan Jenis Aset Dimohon
             </div>
+            <form method="GET" class="mb-3">
+                <input type="hidden" name="reject_year" value="{{ $selectedRejectYear }}">
+                <select name="asset_year" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">Semua Tahun</option>
+                    @foreach ($filterYears as $year)
+                        <option value="{{ $year }}" @selected($selectedAssetYear === $year)>Tahun {{ $year }}</option>
+                    @endforeach
+                </select>
+            </form>
             <div style="height: 350px;">
                 <canvas id="assetChart"></canvas>
             </div>
@@ -100,6 +109,15 @@ body::before {
             <div class="fw-bold text-uppercase mb-3" style="font-size: 0.9rem; color: #1e3a8a;">
                 <i class="bi bi-x-circle-fill text-danger me-2"></i>Statistik Aset Ditolak (Ditolak)
             </div>
+            <form method="GET" class="mb-3">
+                <input type="hidden" name="asset_year" value="{{ $selectedAssetYear }}">
+                <select name="reject_year" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">Semua Tahun</option>
+                    @foreach ($filterYears as $year)
+                        <option value="{{ $year }}" @selected($selectedRejectYear === $year)>Tahun {{ $year }}</option>
+                    @endforeach
+                </select>
+            </form>
             <div style="height: 350px;">
                 <canvas id="rejectChart"></canvas>
             </div>
@@ -153,7 +171,6 @@ body::before {
     // ✅ SAFEST METHOD (no JS parsing error)
     const yearLabels = JSON.parse('@json($yearLabels)');
     const yearTotals = JSON.parse('@json($yearTotals)');
-    const yearPercentages = JSON.parse('@json($yearPercentages)');
 
     const assetLabels = JSON.parse('@json($assetLabels)');
     const assetCodes = JSON.parse('@json($assetCodes)');
@@ -257,9 +274,8 @@ body::before {
         data: {
             labels: yearLabels,
             datasets: [{
-                label: 'Peratus Permohonan',
-                data: yearPercentages,
-                counts: yearTotals,
+                label: 'Jumlah Permohonan',
+                data: yearTotals,
                 backgroundColor: colorBlue,
                 borderRadius: 5
             }]
@@ -271,15 +287,12 @@ body::before {
                 tooltip: {
                     callbacks: {
                         label(context) {
-                            const percentage = context.raw ?? 0;
-                            const total = context.dataset.counts?.[context.dataIndex] ?? 0;
-
-                            return `${percentFormatter(percentage)} (${total} permohonan)`;
+                            return `${context.raw ?? 0} permohonan`;
                         }
                     }
                 }
             },
-            scales: { y: percentageTickOptions }
+            scales: { y: integerTickOptions }
         }
     });
 

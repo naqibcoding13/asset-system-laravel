@@ -4,9 +4,19 @@
     $isEdit = isset($assetRequest);
     $categoryOptions = collect($assetCategories);
     $categoryCodes = $categoryOptions->keys();
+    $resolveAssetCode = function ($value) use ($categoryCodes) {
+        $rawValue = trim((string) $value);
+
+        if ($categoryCodes->contains($rawValue)) {
+            return $rawValue;
+        }
+
+        return $categoryCodes->first(fn ($code) => str_starts_with($rawValue, (string) $code)) ?? '';
+    };
     $rowItems = old('jenis_aset')
-        ? collect(old('jenis_aset'))->map(function ($value, $index) use ($assetCategories, $otherDetailValue) {
-            $detailOptions = data_get($assetCategories, "{$value}.details", []);
+        ? collect(old('jenis_aset'))->map(function ($value, $index) use ($assetCategories, $otherDetailValue, $resolveAssetCode) {
+            $jenisAset = $resolveAssetCode($value);
+            $detailOptions = data_get($assetCategories, "{$jenisAset}.details", []);
             $oldDetail = old('perincian_aset')[$index] ?? '';
             $customDetail = old('custom_perincian_aset')[$index] ?? '';
 
@@ -16,7 +26,7 @@
             }
 
             return [
-                'jenis_aset' => $value,
+                'jenis_aset' => $jenisAset,
                 'perincian_aset' => $oldDetail,
                 'custom_perincian_aset' => $customDetail,
                 'kuantiti' => old('kuantiti')[$index] ?? '',
@@ -26,8 +36,8 @@
             ];
         })->values()->all()
         : ($isEdit
-            ? $assetRequest->items->map(function ($item) use ($categoryCodes, $assetCategories, $otherDetailValue) {
-                $jenisAset = $categoryCodes->contains($item->jenis_aset) ? $item->jenis_aset : '';
+            ? $assetRequest->items->map(function ($item) use ($assetCategories, $otherDetailValue, $resolveAssetCode) {
+                $jenisAset = $resolveAssetCode($item->jenis_aset);
                 $detailOptions = data_get($assetCategories, "{$jenisAset}.details", []);
                 $detailValue = in_array($item->perincian_aset, $detailOptions, true) ? $item->perincian_aset : ($item->perincian_aset ? $otherDetailValue : '');
 

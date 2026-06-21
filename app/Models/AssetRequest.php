@@ -16,6 +16,11 @@ class AssetRequest extends Model
         'jabatan',
         'unit',
         'user_id',
+        'archived_at',
+    ];
+
+    protected $casts = [
+        'archived_at' => 'datetime',
     ];
 
     public function user()
@@ -26,5 +31,15 @@ class AssetRequest extends Model
     public function items()
     {
         return $this->hasMany(RequestItem::class, 'request_id');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->whereNull('archived_at');
+    }
+
+    public function scopeArchived($query)
+    {
+        return $query->whereNotNull('archived_at');
     }
 }

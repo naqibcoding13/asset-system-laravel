@@ -22,6 +22,7 @@ class RequestManagementController extends Controller
         ]);
 
         $requests = AssetRequest::query()
+            ->active()
             ->with(['user', 'items'])
             ->when($filters['tahun'] ?? null, fn ($query, $tahun) => $query->where('tahun', $tahun))
             ->when($filters['bahagian'] ?? null, fn ($query, $bahagian) => $query->where('unit', $bahagian))
@@ -41,6 +42,41 @@ class RequestManagementController extends Controller
             'units' => config('asset_system.units'),
             'years' => config('asset_system.application_years'),
             'statusOptions' => RequestItem::statusOptions(),
+            'isArchive' => false,
+        ]);
+    }
+
+    public function archiveIndex(Request $request)
+    {
+        $filters = $request->validate([
+            'tahun' => ['nullable', 'string', Rule::in(config('asset_system.application_years'))],
+            'bahagian' => ['nullable', 'string', Rule::in(config('asset_system.units'))],
+            'jenis_aset' => ['nullable', 'string'],
+            'status' => ['nullable', 'string', Rule::in(array_keys(RequestItem::statusOptions()))],
+        ]);
+
+        $requests = AssetRequest::query()
+            ->archived()
+            ->with(['user', 'items'])
+            ->when($filters['tahun'] ?? null, fn ($query, $tahun) => $query->where('tahun', $tahun))
+            ->when($filters['bahagian'] ?? null, fn ($query, $bahagian) => $query->where('unit', $bahagian))
+            ->when($filters['jenis_aset'] ?? null, function ($query, $jenisAset) {
+                $query->whereHas('items', function ($itemQuery) use ($jenisAset) {
+                    $itemQuery->where('jenis_aset', 'like', '%' . $jenisAset . '%')
+                        ->orWhere('perincian_aset', 'like', '%' . $jenisAset . '%');
+                });
+            })
+            ->when($filters['status'] ?? null, fn ($query, $status) => $query->whereHas('items', fn ($itemQuery) => $itemQuery->where('status', $status)))
+            ->latest('archived_at')
+            ->get();
+
+        return view('admin.requests.index', [
+            'requests' => $requests,
+            'filters' => $filters,
+            'units' => config('asset_system.units'),
+            'years' => config('asset_system.application_years'),
+            'statusOptions' => RequestItem::statusOptions(),
+            'isArchive' => true,
         ]);
     }
 
@@ -58,6 +94,24 @@ class RequestManagementController extends Controller
         return redirect()->route('admin.requests.index')->with('success', 'Permohonan berjaya dipadam.');
     }
 
+    public function archive(AssetRequest $assetRequest)
+    {
+        $assetRequest->update([
+            'archived_at' => now(),
+        ]);
+
+        return redirect()->route('admin.requests.index')->with('success', 'Permohonan berjaya diarkibkan.');
+    }
+
+    public function restore(AssetRequest $assetRequest)
+    {
+        $assetRequest->update([
+            'archived_at' => null,
+        ]);
+
+        return redirect()->route('admin.archive.index')->with('success', 'Permohonan berjaya dipulihkan.');
+    }
+
     public function print(Request $request)
     {
         $filters = $request->validate([
@@ -70,6 +124,7 @@ class RequestManagementController extends Controller
         $status = $filters['status'] ?? null;
 
         $requests = AssetRequest::query()
+            ->active()
             ->with([
                 'user',
                 'items' => fn ($query) => $query->when(
@@ -108,6 +163,7 @@ class RequestManagementController extends Controller
         $status = $filters['status'] ?? null;
 
         $requests = AssetRequest::query()
+            ->active()
             ->with([
                 'user',
                 'items' => fn ($query) => $query->when(

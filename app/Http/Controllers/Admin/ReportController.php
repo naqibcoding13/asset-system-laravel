@@ -5,22 +5,30 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AssetRequest;
 use App\Models\RequestItem;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
     private const LEGACY_ASSET_KEY = '__legacy__';
 
-    public function index()
+    public function index(Request $request)
     {
         $assetCategories = config('asset_system.asset_categories');
         $assetCodes = array_keys($assetCategories);
         $applicationYears = collect(config('asset_system.application_years'))
             ->map(fn ($year) => (string) $year)
             ->values();
+        $selectedAssetYear = $applicationYears->contains((string) $request->query('asset_year'))
+            ? (string) $request->query('asset_year')
+            : '';
+        $selectedRejectYear = $applicationYears->contains((string) $request->query('reject_year'))
+            ? (string) $request->query('reject_year')
+            : '';
 
         $summaries = AssetRequest::query()
             ->leftJoin('request_items', 'requests.id', '=', 'request_items.request_id')
+            ->whereNull('requests.archived_at')
             ->select(
                 'requests.tahun',
                 'requests.unit',
@@ -33,6 +41,7 @@ class ReportController extends Controller
             ->get();
 
         $yearData = AssetRequest::query()
+            ->active()
             ->select('tahun', DB::raw('COUNT(*) as total'))
             ->groupBy('tahun')
             ->orderBy('tahun')
@@ -50,8 +59,11 @@ class ReportController extends Controller
         $assetCounts = array_fill_keys($assetCodes, 0);
         $assetCounts[self::LEGACY_ASSET_KEY] = 0;
         RequestItem::query()
-            ->select('jenis_aset', DB::raw('COUNT(*) as total'))
-            ->groupBy('jenis_aset')
+            ->join('requests', 'requests.id', '=', 'request_items.request_id')
+            ->whereNull('requests.archived_at')
+            ->select('request_items.jenis_aset', DB::raw('COUNT(*) as total'))
+            ->when($selectedAssetYear !== '', fn ($query) => $query->where('requests.tahun', $selectedAssetYear))
+            ->groupBy('request_items.jenis_aset')
             ->get()
             ->each(function ($row) use (&$assetCounts) {
                 if (array_key_exists($row->jenis_aset, $assetCounts)) {
@@ -67,9 +79,12 @@ class ReportController extends Controller
         $rejectCounts = array_fill_keys($assetCodes, 0);
         $rejectCounts[self::LEGACY_ASSET_KEY] = 0;
         RequestItem::query()
-            ->select('jenis_aset', DB::raw('COUNT(*) as total'))
-            ->where('status', 'Rejected')
-            ->groupBy('jenis_aset')
+            ->join('requests', 'requests.id', '=', 'request_items.request_id')
+            ->whereNull('requests.archived_at')
+            ->select('request_items.jenis_aset', DB::raw('COUNT(*) as total'))
+            ->where('request_items.status', 'Rejected')
+            ->when($selectedRejectYear !== '', fn ($query) => $query->where('requests.tahun', $selectedRejectYear))
+            ->groupBy('request_items.jenis_aset')
             ->get()
             ->each(function ($row) use (&$rejectCounts) {
                 if (array_key_exists($row->jenis_aset, $rejectCounts)) {
@@ -81,6 +96,7 @@ class ReportController extends Controller
 
         $statusByYearRaw = RequestItem::query()
             ->join('requests', 'requests.id', '=', 'request_items.request_id')
+            ->whereNull('requests.archived_at')
             ->select(
                 'requests.tahun',
                 'request_items.status',
@@ -115,6 +131,9 @@ class ReportController extends Controller
             'yearLabels' => $yearLabels,
             'yearTotals' => $yearTotals,
             'yearPercentages' => $yearPercentages,
+            'filterYears' => $applicationYears->all(),
+            'selectedAssetYear' => $selectedAssetYear,
+            'selectedRejectYear' => $selectedRejectYear,
             'assetLabels' => $assetChartData['labels'],
             'assetCodes' => $assetChartData['codes'],
             'assetTotals' => $assetChartData['totals'],

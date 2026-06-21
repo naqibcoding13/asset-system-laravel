@@ -11,14 +11,21 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $currentYear = (string) now()->year;
+        $currentYearRequestIds = AssetRequest::query()
+            ->active()
+            ->where('tahun', $currentYear)
+            ->pluck('id');
+
         $summary = [
-            'total_requests' => AssetRequest::count(),
-            'total_assets' => RequestItem::count(),
-            'total_budget' => RequestItem::sum('jumlah') ?? 0,
+            'total_requests' => $currentYearRequestIds->count(),
+            'total_assets' => RequestItem::whereIn('request_id', $currentYearRequestIds)->count(),
+            'total_budget' => RequestItem::whereIn('request_id', $currentYearRequestIds)->sum('jumlah') ?? 0,
             'total_users' => User::count(),
+            'current_year' => $currentYear,
         ];
 
-        $latestRequests = AssetRequest::with(['user', 'items'])->latest()->take(5)->get();
+        $latestRequests = AssetRequest::active()->with(['user', 'items'])->latest()->take(5)->get();
 
         return view('admin.dashboard', compact('summary', 'latestRequests'));
     }

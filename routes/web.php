@@ -36,7 +36,10 @@ Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->grou
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/permohonan', [RequestManagementController::class, 'index'])->name('requests.index');
+    Route::get('/arkib', [RequestManagementController::class, 'archiveIndex'])->name('archive.index');
     Route::get('/permohonan/{assetRequest}', [RequestManagementController::class, 'show'])->name('requests.show');
+    Route::patch('/permohonan/{assetRequest}/archive', [RequestManagementController::class, 'archive'])->name('requests.archive');
+    Route::patch('/permohonan/{assetRequest}/restore', [RequestManagementController::class, 'restore'])->name('requests.restore');
     Route::delete('/permohonan/{assetRequest}', [RequestManagementController::class, 'destroy'])->name('requests.destroy');
     Route::get('/permohonan-cetak', [RequestManagementController::class, 'print'])->name('requests.print');
     Route::get('/permohonan-excel', [RequestManagementController::class, 'exportExcel'])->name('requests.excel');
