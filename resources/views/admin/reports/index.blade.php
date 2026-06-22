@@ -64,7 +64,7 @@ body::before {
     <div class="col-12">
         <div class="page-card p-4">
             <div class="fw-bold text-uppercase mb-3" style="font-size: 0.9rem; color: #1e3a8a;">
-                <i class="bi bi-calendar3 text-danger me-2"></i>Tren Permohonan Mengikut Tahun
+                <i class="bi bi-calendar3 text-danger me-2"></i> Permohonan Mengikut Tahun
             </div>
             <div style="height: 300px;">
                 <canvas id="yearChart"></canvas>
@@ -90,7 +90,7 @@ body::before {
             </div>
             <form method="GET" class="mb-3">
                 <input type="hidden" name="reject_year" value="{{ $selectedRejectYear }}">
-                <select name="asset_year" class="form-select form-select-sm" onchange="this.form.submit()">
+                <select name="asset_year" class="form-select form-select-sm js-preserve-scroll-filter">
                     <option value="">Semua Tahun</option>
                     @foreach ($filterYears as $year)
                         <option value="{{ $year }}" @selected($selectedAssetYear === $year)>Tahun {{ $year }}</option>
@@ -111,7 +111,7 @@ body::before {
             </div>
             <form method="GET" class="mb-3">
                 <input type="hidden" name="asset_year" value="{{ $selectedAssetYear }}">
-                <select name="reject_year" class="form-select form-select-sm" onchange="this.form.submit()">
+                <select name="reject_year" class="form-select form-select-sm js-preserve-scroll-filter">
                     <option value="">Semua Tahun</option>
                     @foreach ($filterYears as $year)
                         <option value="{{ $year }}" @selected($selectedRejectYear === $year)>Tahun {{ $year }}</option>
@@ -167,6 +167,25 @@ body::before {
     const colorBlue = '#1e3a8a';
     const colorRed = '#a30000';
     const chartPalette = ['#1e3a8a', '#a30000', '#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#6366f1', '#0f766e', '#92400e'];
+    const reportScrollKey = 'adminReportsScrollY';
+
+    document.querySelectorAll('.js-preserve-scroll-filter').forEach(filter => {
+        filter.addEventListener('change', event => {
+            sessionStorage.setItem(reportScrollKey, String(window.scrollY));
+            event.target.form.submit();
+        });
+    });
+
+    window.addEventListener('load', () => {
+        const savedScrollY = sessionStorage.getItem(reportScrollKey);
+
+        if (savedScrollY === null) {
+            return;
+        }
+
+        sessionStorage.removeItem(reportScrollKey);
+        window.scrollTo(0, Number(savedScrollY));
+    });
 
     // ✅ SAFEST METHOD (no JS parsing error)
     const yearLabels = JSON.parse('@json($yearLabels)');
