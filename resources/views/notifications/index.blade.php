@@ -78,7 +78,26 @@
 <div class="page-card p-4 bg-white shadow-sm">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="fw-bold mb-0 text-dark">Notifikasi Terkini</h5>
-        <span class="badge bg-primary rounded-pill px-3">{{ $notifications->count() }} Mesej</span>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary rounded-pill px-3">{{ $notifications->count() }} Mesej</span>
+            @if ($notifications->isNotEmpty())
+                <form
+                    method="POST"
+                    action="{{ route('notifications.destroy-all') }}"
+                    class="js-confirm-form"
+                    data-confirm-variant="danger"
+                    data-confirm-title="Padam Semua Notifikasi?"
+                    data-confirm-message="Semua mesej notifikasi untuk akaun anda sahaja akan dipadam. Notifikasi akaun lain tidak akan terkesan."
+                    data-confirm-button="Ya, padam semua"
+                >
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash3 me-1"></i> Padam Semua
+                    </button>
+                </form>
+            @endif
+        </div>
     </div>
 
     <div class="notification-container">

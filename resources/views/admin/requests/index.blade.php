@@ -150,7 +150,15 @@ body::before {
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('admin.requests.show', $request) }}" class="btn btn-sm btn-outline-primary">Perincian</a>
                                     @if ($isArchive)
-                                        <form method="POST" action="{{ route('admin.requests.restore', $request) }}" onsubmit="return confirm('Pulihkan permohonan ini ke senarai aktif?')">
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.requests.restore', $request) }}"
+                                            class="js-confirm-form"
+                                            data-confirm-variant="success"
+                                            data-confirm-title="Pulihkan Permohonan?"
+                                            data-confirm-message="Permohonan #{{ $request->id }} akan dipindahkan semula ke senarai aktif untuk tindakan seterusnya."
+                                            data-confirm-button="Ya, pulihkan"
+                                        >
                                             @csrf
                                             @method('PATCH')
                                             <button class="btn btn-sm btn-outline-success" title="Pulihkan">
@@ -158,7 +166,15 @@ body::before {
                                             </button>
                                         </form>
                                     @else
-                                        <form method="POST" action="{{ route('admin.requests.archive', $request) }}" onsubmit="return confirm('Arkibkan permohonan ini?')">
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.requests.archive', $request) }}"
+                                            class="js-confirm-form"
+                                            data-confirm-variant="warning"
+                                            data-confirm-title="Arkibkan Permohonan?"
+                                            data-confirm-message="Permohonan #{{ $request->id }} akan disimpan dalam arkib dan tidak lagi dipaparkan dalam senarai aktif."
+                                            data-confirm-button="Ya, arkibkan"
+                                        >
                                             @csrf
                                             @method('PATCH')
                                             <button class="btn btn-sm btn-outline-secondary" title="Arkib">
@@ -166,7 +182,15 @@ body::before {
                                             </button>
                                         </form>
                                     @endif
-                                    <form method="POST" action="{{ route('admin.requests.destroy', $request) }}" onsubmit="return confirm('Anda pasti mahu padam permohonan ini?')">
+                                    <form
+                                        method="POST"
+                                        action="{{ route('admin.requests.destroy', $request) }}"
+                                        class="js-confirm-form"
+                                        data-confirm-variant="danger"
+                                        data-confirm-title="Padam Permohonan?"
+                                        data-confirm-message="Permohonan #{{ $request->id }} akan dipadam daripada sistem. Tindakan ini tidak boleh dibuat asal."
+                                        data-confirm-button="Ya, padam"
+                                    >
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-outline-danger" title="Padam">

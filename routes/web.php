@@ -54,4 +54,5 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 Route::middleware('auth')->get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::middleware('auth')->delete('/notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroy-all');
 Route::middleware('auth')->get('/quotation/{requestItem}', [QuotationController::class, 'show'])->name('quotations.show');

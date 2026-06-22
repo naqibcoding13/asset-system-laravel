@@ -13,4 +13,13 @@ class NotificationController extends Controller
             'notifications' => $user->systemNotifications()->latest()->get(),
         ]);
     }
+
+    public function destroyAll()
+    {
+        auth()->user()->systemNotifications()->delete();
+
+        return redirect()
+            ->route('notifications.index')
+            ->with('success', 'Semua notifikasi akaun anda telah dipadam.');
+    }
 }

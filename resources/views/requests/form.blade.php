@@ -3,7 +3,7 @@
 @php
     $isEdit = isset($assetRequest);
     $categoryOptions = collect($assetCategories);
-    $categoryCodes = $categoryOptions->keys();
+    $categoryCodes = $categoryOptions->keys()->map(fn ($code) => (string) $code);
     $resolveAssetCode = function ($value) use ($categoryCodes) {
         $rawValue = trim((string) $value);
 
@@ -159,7 +159,7 @@
                                     <select name="jenis_aset[]" class="form-select asset-type" required>
                                         <option value="">-- Pilih Kod Aset --</option>
                                         @foreach ($assetCategories as $code => $category)
-                                            <option value="{{ $code }}" @selected($row['jenis_aset'] === $code)>{{ $code }} - {{ $category['label'] }}</option>
+                                            <option value="{{ $code }}" @selected((string) $row['jenis_aset'] === (string) $code)>{{ $code }} - {{ $category['label'] }}</option>
                                         @endforeach
                                     </select>
                                     @error("jenis_aset.$index")

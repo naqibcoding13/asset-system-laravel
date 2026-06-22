@@ -75,7 +75,15 @@ body::before {
                                     <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-outline-primary" title="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form method="POST" action="{{ route('admin.users.destroy', $user) }}" onsubmit="return confirm('Adakah anda pasti?')" class="d-inline">
+                                    <form
+                                        method="POST"
+                                        action="{{ route('admin.users.destroy', $user) }}"
+                                        class="d-inline js-confirm-form"
+                                        data-confirm-variant="danger"
+                                        data-confirm-title="Padam Pengguna?"
+                                        data-confirm-message="Akaun {{ $user->username }} akan dipadam daripada sistem. Pastikan akses pengguna ini tidak lagi diperlukan."
+                                        data-confirm-button="Ya, padam"
+                                    >
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-outline-danger" title="Padam">
