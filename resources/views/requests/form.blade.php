@@ -207,7 +207,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-danger btn-sm remove-row">Buang</button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm remove-row">Hapus</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -256,7 +256,7 @@
                 <input type="hidden" name="existing_quotation[]" value="">
                 <input type="file" name="quotation[]" class="form-control form-control-sm">
             </td>
-            <td><button type="button" class="btn btn-outline-danger btn-sm remove-row">Buang</button></td>
+            <td><button type="button" class="btn btn-outline-danger btn-sm remove-row">Hapus</button></td>
         </tr>
     </template>
 @endsection
