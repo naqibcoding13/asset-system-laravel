@@ -400,7 +400,7 @@
     </div>
 
     <div class="footer text-center">
-        <p class="mb-0">&copy; 2024-2027 <strong>Pejabat Tanah & Jajahan Bachok</strong>. Hak Cipta Terpelihara.</p>
+        <p class="mb-0">&copy; 2024-2026 <strong>Pejabat Tanah & Jajahan Bachok</strong>. Hak Cipta Terpelihara.</p>
     </div>
 
 </div>
