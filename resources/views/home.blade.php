@@ -353,7 +353,7 @@
                     ['img' => '2.jpeg', 'name' => 'EN. HASANUL HARIZ BIN AB. LLAH ZAWAWI', 'role' => 'Timbalan Ketua Jajahan'],
                     ['img' => 'KOSONG.png', 'name' => 'KOSONG', 'role' => 'Ketua Penolong Ketua Jajahan (Khidmat Pengurusan)'],
                     ['img' => '4.jpeg', 'name' => 'PUAN MASLEZA BINTI MUHAMMAD', 'role' => 'Ketua Penolong Ketua Jajahan (Pembangunan)'],
-                    ['img' => '5.jpeg', 'name' => 'CIK EMILSA NAZARIH BINTI BADROL RISYAM', 'role' => 'Penolong Ketua Jajahan (Pembangunan & Pelupusan Tanah)'],
+                    ['img' => '5.jpeg', 'name' => 'En. MOHD HAFIZIE BIN HASHIM', 'role' => 'Penolong Ketua Jajahan (Pembangunan & Pelupusan Tanah)'],
                     ['img' => '6.jpeg', 'name' => 'EN. AHMAD HUDZAIFAH BIN ABDUL HAKIM', 'role' => 'Penolong Ketua Jajahan (Pendaftaran)'],
                     ['img' => '7.png', 'name' => 'EN. AIMAN HAFIY BIN ABDULLAH', 'role' => 'Penolong Ketua Jajahan (Pembangunan Masyarakat)'],
                     ['img' => 'KOSONG.png', 'name' => 'KOSONG', 'role' => 'Pegawai Pembangunan Sosio Ekonomi'],

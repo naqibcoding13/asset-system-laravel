@@ -10,12 +10,13 @@
         .header-text { flex: 1; text-align: center; }
         .title { font-size: 18px; font-weight: bold; text-transform: uppercase; }
         .sub-title { font-size: 13px; margin-top: 3px; }
-        .request-block { margin-bottom: 24px; page-break-inside: avoid; }
+        .request-block { margin-bottom: 24px; break-inside: auto; page-break-inside: auto; }
         .request-meta { margin-bottom: 10px; font-size: 12px; line-height: 1.5; }
         table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
         table, th, td { border: 1px solid black; }
         th { background-color: #e5e7eb; }
         th, td { padding: 6px; text-align: center; vertical-align: top; }
+        tr { break-inside: avoid; page-break-inside: avoid; }
         .text-left { text-align: left; }
         .total-row { background-color: #f3f4f6; font-weight: bold; }
         .footer { margin-top: 40px; font-size: 12px; }
